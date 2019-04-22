@@ -65,270 +65,274 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./style.scss";
 
 export default class exampleComponents extends React.Component {
-    componentDidMount() {
-        hljs.initHighlightingOnLoad();
+  componentDidMount() {
+    hljs.initHighlightingOnLoad();
+  }
+
+  examples = [
+    {
+      title: "Default",
+      component: <Default />
+    },
+    {
+      title: "Select Time",
+      component: <ShowTime />
+    },
+    {
+      title: "Select Time Only",
+      component: <ShowTimeOnly />
+    },
+    {
+      title: "Exclude Times",
+      component: <ExcludeTimes />
+    },
+    {
+      title: "Include Times",
+      component: <IncludeTimes />
+    },
+    {
+      title: "Inject Specific Times",
+      component: <InjectTimes />
+    },
+    {
+      title: "Specific Time Range",
+      component: <ExcludeTimePeriod />
+    },
+    {
+      title: "Custom date format",
+      component: <CustomDateFormat />
+    },
+    {
+      title: "Custom class name",
+      component: <CustomClassName />
+    },
+    {
+      title: "Custom calendar class name",
+      component: <CustomCalendarClassName />
+    },
+    {
+      title: "Custom day class names",
+      component: <CustomDayClassNames />
+    },
+    {
+      title: "Today button",
+      component: <Today />
+    },
+    {
+      title: "Placeholder text",
+      component: <PlaceholderText />
+    },
+    {
+      title: "Specific date range",
+      component: <SpecificDateRange />
+    },
+    {
+      title: "Min date",
+      component: <MinDate />
+    },
+    {
+      title: "Min date with time",
+      component: <MinDateWithTime />
+    },
+    {
+      title: "Max date",
+      component: <MaxDate />
+    },
+    {
+      title: "Max date with time",
+      component: <MaxDateWithTime />
+    },
+    {
+      title: "Date Range with disabled navigation shown",
+      component: <DateRangeWithShowDisabledNavigation />
+    },
+    {
+      title: "Locale",
+      component: <Locale />
+    },
+    {
+      title: "Locale without global variables",
+      component: <LocaleWithoutGlobalVariable />
+    },
+    {
+      title: "Exclude dates",
+      component: <ExcludeDates />
+    },
+    {
+      title: "Highlight dates",
+      component: <HighlightDates />
+    },
+    {
+      title: "Highlight dates with custom class names and ranges",
+      component: <HighlightDatesRanges />
+    },
+    {
+      title: "Include dates",
+      component: <IncludeDates />
+    },
+    {
+      title: "Filter dates",
+      component: <FilterDates />
+    },
+    {
+      title: "Date Range",
+      component: <DateRange />
+    },
+    {
+      title: "Disable datepicker",
+      component: <Disabled />
+    },
+    {
+      title: "Disable keyboard navigation",
+      component: <DisabledKeyboardNavigation />
+    },
+    {
+      title: "Read only datepicker",
+      component: <ReadOnly />
+    },
+    {
+      title: "Clear datepicker input",
+      component: <ClearInput />
+    },
+    {
+      title: "onBlur callbacks in console",
+      component: <OnBlurCallbacks />
+    },
+    {
+      title: "Configure Popper Properties",
+      component: <ConfigurePopper />
+    },
+    {
+      title: "Portal version",
+      component: <Portal />
+    },
+    {
+      title: "Inline portal version",
+      component: <InlinePortal />
+    },
+    {
+      title: "TabIndex",
+      component: <TabIndex />
+    },
+    {
+      title: "Year dropdown",
+      component: <YearDropdown />
+    },
+    {
+      title: "Month dropdown",
+      component: <MonthDropdown />
+    },
+    {
+      title: "Month dropdown short month",
+      component: <MonthDropdownShort />
+    },
+    {
+      title: "MonthYear dropdown",
+      component: <MonthYearDropdown />
+    },
+    {
+      title: "Year select dropdown",
+      component: <YearSelectDropdown />
+    },
+    {
+      title: "Inline version",
+      component: <Inline />
+    },
+    {
+      title: "Open to date",
+      component: <OpenToDate />
+    },
+    {
+      title: "Fixed height of Calendar",
+      component: <FixedCalendar />
+    },
+    {
+      title: "Display Week Numbers",
+      component: <WeekNumbers />
+    },
+    {
+      title: "Custom input",
+      component: <CustomInput />
+    },
+    {
+      title: "Multiple months",
+      component: <MultiMonth />
+    },
+    {
+      title: "Multiple months with year dropdown",
+      component: <MultiMonthDrp />
+    },
+    {
+      title: "Multiple months inline",
+      component: <MultiMonthInline />
+    },
+    {
+      title: "Children",
+      component: <Children />
+    },
+    {
+      title: "Calendar container",
+      component: <CalendarContainer />
+    },
+    {
+      title: "Get raw input value on change",
+      component: <RawChange />
+    },
+    {
+      title: "Don't hide calendar on date selection",
+      component: <DontCloseOnSelect />
+    },
+    {
+      title: "Custom header",
+      component: <RenderCustomHeader />
+    },
+    {
+      title: "Custom Day",
+      component: <RenderCustomDay />
+    },
+    {
+      title: "Input time",
+      component: <TimeInput />
+    },
+    {
+      title: "Strict parsing",
+      component: <StrictParsing />
+    },
+    {
+      title: "Month Picker",
+      component: <MonthPicker />
+    },
+    {
+      title: "Range Month Picker",
+      component: <RangeMonthPicker />
     }
+  ];
 
-    examples = [
-        {
-            title: "Default",
-            component: <Default />,
-        },
-        {
-            title: "Select Time",
-            component: <ShowTime />,
-        },
-        {
-            title: "Select Time Only",
-            component: <ShowTimeOnly />,
-        },
-        {
-            title: "Exclude Times",
-            component: <ExcludeTimes />,
-        },
-        {
-            title: "Include Times",
-            component: <IncludeTimes />,
-        },
-        {
-            title: "Inject Specific Times",
-            component: <InjectTimes />,
-        },
-        {
-            title: "Specific Time Range",
-            component: <ExcludeTimePeriod />,
-        },
-        {
-            title: "Custom date format",
-            component: <CustomDateFormat />,
-        },
-        {
-            title: "Custom class name",
-            component: <CustomClassName />,
-        },
-        {
-            title: "Custom calendar class name",
-            component: <CustomCalendarClassName />,
-        },
-        {
-            title: "Custom day class names",
-            component: <CustomDayClassNames />,
-        },
-        {
-            title: "Today button",
-            component: <Today />,
-        },
-        {
-            title: "Placeholder text",
-            component: <PlaceholderText />,
-        },
-        {
-            title: "Specific date range",
-            component: <SpecificDateRange />,
-        },
-        {
-            title: "Min date",
-            component: <MinDate />,
-        },
-        {
-            title: "Min date with time",
-            component: <MinDateWithTime />,
-        },
-        {
-            title: "Max date",
-            component: <MaxDate />,
-        },
-        {
-            title: "Max date with time",
-            component: <MaxDateWithTime />,
-        },
-        {
-            title: "Date Range with disabled navigation shown",
-            component: <DateRangeWithShowDisabledNavigation />,
-        },
-        {
-            title: "Locale",
-            component: <Locale />,
-        },
-        {
-            title: "Locale without global variables",
-            component: <LocaleWithoutGlobalVariable />,
-        },
-        {
-            title: "Exclude dates",
-            component: <ExcludeDates />,
-        },
-        {
-            title: "Highlight dates",
-            component: <HighlightDates />,
-        },
-        {
-            title: "Highlight dates with custom class names and ranges",
-            component: <HighlightDatesRanges />,
-        },
-        {
-            title: "Include dates",
-            component: <IncludeDates />,
-        },
-        {
-            title: "Filter dates",
-            component: <FilterDates />,
-        },
-        {
-            title: "Date Range",
-            component: <DateRange />,
-        },
-        {
-            title: "Disable datepicker",
-            component: <Disabled />,
-        },
-        {
-            title: "Disable keyboard navigation",
-            component: <DisabledKeyboardNavigation />,
-        },
-        {
-            title: "Read only datepicker",
-            component: <ReadOnly />,
-        },
-        {
-            title: "Clear datepicker input",
-            component: <ClearInput />,
-        },
-        {
-            title: "onBlur callbacks in console",
-            component: <OnBlurCallbacks />,
-        },
-        {
-            title: "Configure Popper Properties",
-            component: <ConfigurePopper />,
-        },
-        {
-            title: "Portal version",
-            component: <Portal />,
-        },
-        {
-            title: "Inline portal version",
-            component: <InlinePortal />,
-        },
-        {
-            title: "TabIndex",
-            component: <TabIndex />,
-        },
-        {
-            title: "Year dropdown",
-            component: <YearDropdown />,
-        },
-        {
-            title: "Month dropdown",
-            component: <MonthDropdown />,
-        },
-        {
-            title: "Month dropdown short month",
-            component: <MonthDropdownShort />,
-        },
-        {
-            title: "MonthYear dropdown",
-            component: <MonthYearDropdown />,
-        },
-        {
-            title: "Year select dropdown",
-            component: <YearSelectDropdown />,
-        },
-        {
-            title: "Inline version",
-            component: <Inline />,
-        },
-        {
-            title: "Open to date",
-            component: <OpenToDate />,
-        },
-        {
-            title: "Fixed height of Calendar",
-            component: <FixedCalendar />,
-        },
-        {
-            title: "Display Week Numbers",
-            component: <WeekNumbers />,
-        },
-        {
-            title: "Custom input",
-            component: <CustomInput />,
-        },
-        {
-            title: "Multiple months",
-            component: <MultiMonth />,
-        },
-        {
-            title: "Multiple months with year dropdown",
-            component: <MultiMonthDrp />,
-        },
-        {
-            title: "Multiple months inline",
-            component: <MultiMonthInline />,
-        },
-        {
-            title: "Children",
-            component: <Children />,
-        },
-        {
-            title: "Calendar container",
-            component: <CalendarContainer />,
-        },
-        {
-            title: "Get raw input value on change",
-            component: <RawChange />,
-        },
-        {
-            title: "Don't hide calendar on date selection",
-            component: <DontCloseOnSelect />,
-        },
-        {
-            title: "Custom header",
-            component: <RenderCustomHeader />,
-        },
-        {
-            title: "Custom Day",
-            component: <RenderCustomDay />,
-        },
-        {
-            title: "Input time",
-            component: <TimeInput />,
-        },
-        {
-            title: "Strict parsing",
-            component: <StrictParsing />,
-        },
-        {
-            title: "Month Picker",
-            component: <MonthPicker />,
-        },
-        {
-            title: "Range Month Picker",
-            component: <RangeMonthPicker />,
-        },
-    ];
+  renderExamples = () =>
+    this.examples.map((example, index) => (
+      <CodeExampleComponent
+        key={`example-${index}`}
+        id={index}
+        title={example.title}
+      >
+        {example.component}
+      </CodeExampleComponent>
+    ));
 
-    renderExamples = () =>
-        this.examples.map((example, index) => (
-            <CodeExampleComponent key={`example-${index}`} id={index} title={example.title}>
-                {example.component}
-            </CodeExampleComponent>
-        ));
+  renderLeftColumn = () =>
+    this.examples.map((example, index) => (
+      <li className="examples__navigation-item" key={`link-${index}`}>
+        <a href={`#example-${index}`}>{example.title}</a>
+      </li>
+    ));
 
-    renderLeftColumn = () =>
-        this.examples.map((example, index) => (
-            <li className="examples__navigation-item" key={`link-${index}`}>
-                <a href={`#example-${index}`}>{example.title}</a>
-            </li>
-        ));
-
-    render() {
-        return (
-            <div>
-                <h1>Examples</h1>
-                <ul className="examples__navigation">{this.renderLeftColumn()}</ul>
-                <div className="examples">{this.renderExamples()}</div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div>
+        <h1>Examples</h1>
+        <ul className="examples__navigation">{this.renderLeftColumn()}</ul>
+        <div className="examples">{this.renderExamples()}</div>
+      </div>
+    );
+  }
 }

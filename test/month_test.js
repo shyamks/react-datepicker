@@ -16,7 +16,7 @@ describe("Month", () => {
       const expectedDay = utils.addDays(start, offset);
       assert(
         utils.isSameDay(day.props.day, expectedDay),
-        `Day ${offset % 7 + 1} ` +
+        `Day ${(offset % 7) + 1} ` +
           `of week ${Math.floor(offset / 7) + 1} ` +
           `should be "${utils.formatDate(expectedDay, "yyyy-MM-dd")}" ` +
           `but it is "${utils.formatDate(day.props.day, "yyyy-MM-dd")}"`

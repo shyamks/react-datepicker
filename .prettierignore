@@ -1,0 +1,8 @@
+# folders
+dist/
+es/
+lib/
+node_modules/
+
+# files
+package.json

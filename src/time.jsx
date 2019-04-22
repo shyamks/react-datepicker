@@ -1,189 +1,214 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-    getHours,
-    getMinutes,
-    newDate,
-    getStartOfDay,
-    addMinutes,
-    formatDate,
-    isTimeInDisabledRange,
-    isTimeInExcludedRange,
-    isTimeDisabled,
-    timesToInjectAfter,
+  getHours,
+  getMinutes,
+  newDate,
+  getStartOfDay,
+  addMinutes,
+  formatDate,
+  isTimeInDisabledRange,
+  isTimeInExcludedRange,
+  isTimeDisabled,
+  timesToInjectAfter
 } from "./date_utils";
 
 export default class Time extends React.Component {
-    static propTypes = {
-        format: PropTypes.string,
-        includeTimes: PropTypes.array,
-        intervals: PropTypes.number,
-        selected: PropTypes.instanceOf(Date),
-        onChange: PropTypes.func,
-        todayButton: PropTypes.node,
-        maxDate: PropTypes.instanceOf(Date),
-        minDate: PropTypes.instanceOf(Date),
-        minTime: PropTypes.instanceOf(Date),
-        maxTime: PropTypes.instanceOf(Date),
-        excludeTimes: PropTypes.array,
-        excludeOutOfBoundsTimes: PropTypes.bool,
-        monthRef: PropTypes.object,
-        timeCaption: PropTypes.string,
-        injectTimes: PropTypes.array,
-    };
+  static propTypes = {
+    format: PropTypes.string,
+    includeTimes: PropTypes.array,
+    intervals: PropTypes.number,
+    selected: PropTypes.instanceOf(Date),
+    onChange: PropTypes.func,
+    todayButton: PropTypes.node,
+    maxDate: PropTypes.instanceOf(Date),
+    minDate: PropTypes.instanceOf(Date),
+    minTime: PropTypes.instanceOf(Date),
+    maxTime: PropTypes.instanceOf(Date),
+    excludeTimes: PropTypes.array,
+    excludeOutOfBoundsTimes: PropTypes.bool,
+    monthRef: PropTypes.object,
+    timeCaption: PropTypes.string,
+    injectTimes: PropTypes.array
+  };
 
-    static get defaultProps() {
-        return {
-            intervals: 30,
-            onTimeChange: () => {},
-            todayButton: null,
-            timeCaption: "Time",
-        };
+  static get defaultProps() {
+    return {
+      intervals: 30,
+      onTimeChange: () => {},
+      todayButton: null,
+      timeCaption: "Time"
+    };
+  }
+
+  static calcCenterPosition = (listHeight, centerLiRef) => {
+    return (
+      centerLiRef.offsetTop - (listHeight / 2 - centerLiRef.clientHeight / 2)
+    );
+  };
+
+  state = {
+    height: null
+  };
+
+  componentDidMount() {
+    // code to ensure selected time will always be in focus within time window when it first appears
+    this.list.scrollTop = Time.calcCenterPosition(
+      this.props.monthRef
+        ? this.props.monthRef.clientHeight - this.header.clientHeight
+        : this.list.clientHeight,
+      this.centerLi
+    );
+    if (this.props.monthRef && this.header) {
+      this.setState({
+        height: this.props.monthRef.clientHeight - this.header.clientHeight
+      });
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    const { selected } = this.props;
+    if (selected != newProps.selected) {
+      this.forceUpdate();
+    }
+  }
+
+  handleClick = time => {
+    if (
+      ((this.props.minTime || this.props.maxTime) &&
+        isTimeInDisabledRange(time, this.props)) ||
+      (this.props.excludeOutOfBoundsTimes &&
+        (this.props.minDate || this.props.maxDate) &&
+        isTimeInExcludedRange(time, this.props)) ||
+      (this.props.excludeTimes &&
+        isTimeDisabled(time, this.props.excludeTimes)) ||
+      (this.props.includeTimes &&
+        !isTimeDisabled(time, this.props.includeTimes))
+    ) {
+      return;
+    }
+    this.props.onChange(time);
+  };
+
+  liClasses = (time, currH, currM) => {
+    let classes = ["react-datepicker__time-list-item"];
+
+    if (
+      currH === getHours(time) &&
+      currM === getMinutes(time) &&
+      (!this.props.excludeOutOfBoundsTimes
+        ? true
+        : !isTimeInExcludedRange(time, this.props))
+    ) {
+      classes.push("react-datepicker__time-list-item--selected");
+    }
+    if (
+      ((this.props.minTime || this.props.maxTime) &&
+        isTimeInDisabledRange(time, this.props)) ||
+      (this.props.excludeOutOfBoundsTimes &&
+        (this.props.minDate || this.props.maxDate) &&
+        isTimeInExcludedRange(time, this.props)) ||
+      (this.props.excludeTimes &&
+        isTimeDisabled(time, this.props.excludeTimes)) ||
+      (this.props.includeTimes &&
+        !isTimeDisabled(time, this.props.includeTimes))
+    ) {
+      classes.push("react-datepicker__time-list-item--disabled");
+    }
+    if (
+      this.props.injectTimes &&
+      (getHours(time) * 60 + getMinutes(time)) % this.props.intervals !== 0
+    ) {
+      classes.push("react-datepicker__time-list-item--injected");
     }
 
-    static calcCenterPosition = (listHeight, centerLiRef) => {
-        return centerLiRef.offsetTop - (listHeight / 2 - centerLiRef.clientHeight / 2);
-    };
+    return classes.join(" ");
+  };
 
-    state = {
-        height: null,
-    };
+  renderTimes = () => {
+    let times = [];
+    const format = this.props.format ? this.props.format : "p";
+    const intervals = this.props.intervals;
+    const activeTime = this.props.selected ? this.props.selected : newDate();
+    const currH = getHours(activeTime);
+    const currM = getMinutes(activeTime);
+    let base = getStartOfDay(activeTime);
+    const multiplier = 1440 / intervals;
+    const sortedInjectTimes =
+      this.props.injectTimes &&
+      this.props.injectTimes.sort(function(a, b) {
+        return a - b;
+      });
+    for (let i = 0; i < multiplier; i++) {
+      const currentTime = addMinutes(base, i * intervals);
+      times.push(currentTime);
 
-    componentDidMount() {
-        // code to ensure selected time will always be in focus within time window when it first appears
-        this.list.scrollTop = Time.calcCenterPosition(
-            this.props.monthRef ? this.props.monthRef.clientHeight - this.header.clientHeight : this.list.clientHeight,
-            this.centerLi,
+      if (sortedInjectTimes) {
+        const timesToInject = timesToInjectAfter(
+          base,
+          currentTime,
+          i,
+          intervals,
+          sortedInjectTimes
         );
-        if (this.props.monthRef && this.header) {
-            this.setState({
-                height: this.props.monthRef.clientHeight - this.header.clientHeight,
-            });
-        }
+        times = times.concat(timesToInject);
+      }
     }
 
-    componentWillReceiveProps(newProps) {
-        const { selected } = this.props;
-        if (selected != newProps.selected) {
-            this.forceUpdate();
-        }
-    }
+    return times.map((time, i) => (
+      <li
+        key={i}
+        onClick={this.handleClick.bind(this, time)}
+        className={this.liClasses(time, currH, currM)}
+        ref={li => {
+          if (
+            (currH === getHours(time) && currM === getMinutes(time)) ||
+            (currH === getHours(time) && !this.centerLi)
+          ) {
+            this.centerLi = li;
+          }
+        }}
+      >
+        {formatDate(time, format)}
+      </li>
+    ));
+  };
 
-    handleClick = (time) => {
-        if (
-            ((this.props.minTime || this.props.maxTime) && isTimeInDisabledRange(time, this.props)) ||
-            (this.props.excludeOutOfBoundsTimes &&
-                (this.props.minDate || this.props.maxDate) &&
-                isTimeInExcludedRange(time, this.props)) ||
-            (this.props.excludeTimes && isTimeDisabled(time, this.props.excludeTimes)) ||
-            (this.props.includeTimes && !isTimeDisabled(time, this.props.includeTimes))
-        ) {
-            return;
-        }
-        this.props.onChange(time);
-    };
+  render() {
+    const { height } = this.state;
 
-    liClasses = (time, currH, currM) => {
-        let classes = ["react-datepicker__time-list-item"];
-
-        if (
-            currH === getHours(time) &&
-            currM === getMinutes(time) &&
-            (!this.props.excludeOutOfBoundsTimes ? true : !isTimeInExcludedRange(time, this.props))
-        ) {
-            classes.push("react-datepicker__time-list-item--selected");
-        }
-        if (
-            ((this.props.minTime || this.props.maxTime) && isTimeInDisabledRange(time, this.props)) ||
-            (this.props.excludeOutOfBoundsTimes &&
-                (this.props.minDate || this.props.maxDate) &&
-                isTimeInExcludedRange(time, this.props)) ||
-            (this.props.excludeTimes && isTimeDisabled(time, this.props.excludeTimes)) ||
-            (this.props.includeTimes && !isTimeDisabled(time, this.props.includeTimes))
-        ) {
-            classes.push("react-datepicker__time-list-item--disabled");
-        }
-        if (this.props.injectTimes && (getHours(time) * 60 + getMinutes(time)) % this.props.intervals !== 0) {
-            classes.push("react-datepicker__time-list-item--injected");
-        }
-
-        return classes.join(" ");
-    };
-
-    renderTimes = () => {
-        let times = [];
-        const format = this.props.format ? this.props.format : "p";
-        const intervals = this.props.intervals;
-        const activeTime = this.props.selected ? this.props.selected : newDate();
-        const currH = getHours(activeTime);
-        const currM = getMinutes(activeTime);
-        let base = getStartOfDay(activeTime);
-        const multiplier = 1440 / intervals;
-        const sortedInjectTimes =
-            this.props.injectTimes &&
-            this.props.injectTimes.sort(function(a, b) {
-                return a - b;
-            });
-        for (let i = 0; i < multiplier; i++) {
-            const currentTime = addMinutes(base, i * intervals);
-            times.push(currentTime);
-
-            if (sortedInjectTimes) {
-                const timesToInject = timesToInjectAfter(base, currentTime, i, intervals, sortedInjectTimes);
-                times = times.concat(timesToInject);
-            }
-        }
-
-        return times.map((time, i) => (
-            <li
-                key={i}
-                onClick={this.handleClick.bind(this, time)}
-                className={this.liClasses(time, currH, currM)}
-                ref={(li) => {
-                    if (
-                        (currH === getHours(time) && currM === getMinutes(time)) ||
-                        (currH === getHours(time) && !this.centerLi)
-                    ) {
-                        this.centerLi = li;
-                    }
-                }}
+    return (
+      <div
+        className={`react-datepicker__time-container ${
+          this.props.todayButton
+            ? "react-datepicker__time-container--with-today-button"
+            : ""
+        }`}
+      >
+        <div
+          className="react-datepicker__header react-datepicker__header--time"
+          ref={header => {
+            this.header = header;
+          }}
+        >
+          <div className="react-datepicker-time__header">
+            {this.props.timeCaption}
+          </div>
+        </div>
+        <div className="react-datepicker__time">
+          <div className="react-datepicker__time-box">
+            <ul
+              className="react-datepicker__time-list"
+              ref={list => {
+                this.list = list;
+              }}
+              style={height ? { height } : {}}
             >
-                {formatDate(time, format)}
-            </li>
-        ));
-    };
-
-    render() {
-        const { height } = this.state;
-
-        return (
-            <div
-                className={`react-datepicker__time-container ${
-                    this.props.todayButton ? "react-datepicker__time-container--with-today-button" : ""
-                }`}
-            >
-                <div
-                    className="react-datepicker__header react-datepicker__header--time"
-                    ref={(header) => {
-                        this.header = header;
-                    }}
-                >
-                    <div className="react-datepicker-time__header">{this.props.timeCaption}</div>
-                </div>
-                <div className="react-datepicker__time">
-                    <div className="react-datepicker__time-box">
-                        <ul
-                            className="react-datepicker__time-list"
-                            ref={(list) => {
-                                this.list = list;
-                            }}
-                            style={height ? { height } : {}}
-                        >
-                            {this.renderTimes.bind(this)()}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+              {this.renderTimes.bind(this)()}
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
