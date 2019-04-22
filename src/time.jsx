@@ -45,12 +45,21 @@ export default class Time extends React.Component {
         return centerLiRef.offsetTop - (listHeight / 2 - centerLiRef.clientHeight / 2);
     };
 
+    state = {
+        height: null,
+    };
+
     componentDidMount() {
         // code to ensure selected time will always be in focus within time window when it first appears
         this.list.scrollTop = Time.calcCenterPosition(
             this.props.monthRef ? this.props.monthRef.clientHeight - this.header.clientHeight : this.list.clientHeight,
             this.centerLi,
         );
+        if (this.props.monthRef && this.header) {
+            this.setState({
+                height: this.props.monthRef.clientHeight - this.header.clientHeight,
+            });
+        }
     }
 
     componentWillReceiveProps(newProps) {
@@ -75,7 +84,6 @@ export default class Time extends React.Component {
     };
 
     liClasses = (time, currH, currM) => {
-        const { selected } = this.props;
         let classes = ["react-datepicker__time-list-item"];
 
         if (
@@ -146,10 +154,7 @@ export default class Time extends React.Component {
     };
 
     render() {
-        let height = null;
-        if (this.props.monthRef && this.header) {
-            height = this.props.monthRef.clientHeight - this.header.clientHeight;
-        }
+        const { height } = this.state;
 
         return (
             <div

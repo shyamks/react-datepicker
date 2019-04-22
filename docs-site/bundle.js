@@ -15148,11 +15148,7 @@
                             return _this.examples.map(function(example, index) {
                                 return _react2.default.createElement(
                                     _code_example_component2.default,
-                                    {
-                                        key: "example-" + index,
-                                        id: index,
-                                        title: example.title,
-                                    },
+                                    { key: "example-" + index, id: index, title: example.title },
                                     example.component,
                                 );
                             });
@@ -39956,11 +39952,7 @@
 
                         return _react2.default.createElement(
                             "button",
-                            {
-                                type: "button",
-                                className: classes.join(" "),
-                                onClick: clickHandler,
-                            },
+                            { type: "button", className: classes.join(" "), onClick: clickHandler },
                             _this.props.showMonthYearPicker
                                 ? _this.props.previousYearButtonLabel
                                 : _this.props.previousMonthButtonLabel,
@@ -40015,11 +40007,7 @@
 
                         return _react2.default.createElement(
                             "button",
-                            {
-                                type: "button",
-                                className: classes.join(" "),
-                                onClick: clickHandler,
-                            },
+                            { type: "button", className: classes.join(" "), onClick: clickHandler },
                             _this.props.showMonthYearPicker
                                 ? _this.props.nextYearButtonLabel
                                 : _this.props.nextMonthButtonLabel,
@@ -51523,6 +51511,9 @@
                             _React$Component.call.apply(_React$Component, [this].concat(args)),
                         )),
                         _this)),
+                        (_this.state = {
+                            height: null,
+                        }),
                         (_this.handleClick = function(time) {
                             if (
                                 ((_this.props.minTime || _this.props.maxTime) &&
@@ -51540,8 +51531,6 @@
                             _this.props.onChange(time);
                         }),
                         (_this.liClasses = function(time, currH, currM) {
-                            var selected = _this.props.selected;
-
                             var classes = ["react-datepicker__time-list-item"];
 
                             if (
@@ -51641,6 +51630,11 @@
                             : this.list.clientHeight,
                         this.centerLi,
                     );
+                    if (this.props.monthRef && this.header) {
+                        this.setState({
+                            height: this.props.monthRef.clientHeight - this.header.clientHeight,
+                        });
+                    }
                 };
 
                 Time.prototype.componentWillReceiveProps = function componentWillReceiveProps(newProps) {
@@ -51654,10 +51648,7 @@
                 Time.prototype.render = function render() {
                     var _this2 = this;
 
-                    var height = null;
-                    if (this.props.monthRef && this.header) {
-                        height = this.props.monthRef.clientHeight - this.header.clientHeight;
-                    }
+                    var height = this.state.height;
 
                     return _react2.default.createElement(
                         "div",
